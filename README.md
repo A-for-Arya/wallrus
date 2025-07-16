@@ -1,1 +1,1 @@
-chatbot test for wordpree
+chatbot test for wordpress
