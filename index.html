@@ -453,14 +453,20 @@
                     
                     // Handle different response formats
                     let aiResponse = '';
+                    
+                    // If response is an array, get the first item
+                    if (Array.isArray(response) && response.length > 0) {
+                        response = response[0];
+                    }
+                    
                     if (typeof response === 'string') {
                         aiResponse = response;
+                    } else if (response && response.output) {
+                        aiResponse = response.output;
                     } else if (response && response.response) {
                         aiResponse = response.response;
                     } else if (response && response.message) {
                         aiResponse = response.message;
-                    } else if (response && response.output) {
-                        aiResponse = response.output;
                     } else if (response && response.text) {
                         aiResponse = response.text;
                     } else if (response && response.result) {
