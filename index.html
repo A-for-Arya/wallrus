@@ -449,35 +449,47 @@
             sendToWebhook(message, webhookUrl)
                 .then(response => {
                     removeMessage(typingId);
-                    console.log('Parsed response:', response); // Debug log
+                    console.log('Final response object:', response);
+                    console.log('Response keys:', Object.keys(response || {}));
                     
                     // Handle different response formats
                     let aiResponse = '';
                     
                     // If response is an array, get the first item
                     if (Array.isArray(response) && response.length > 0) {
+                        console.log('Response is array, getting first item:', response[0]);
                         response = response[0];
+                        console.log('First item keys:', Object.keys(response || {}));
                     }
                     
+                    // Try different possible field names
                     if (typeof response === 'string') {
+                        console.log('Response is string:', response);
                         aiResponse = response;
                     } else if (response && response.output) {
+                        console.log('Found output field:', response.output);
                         aiResponse = response.output;
                     } else if (response && response.response) {
+                        console.log('Found response field:', response.response);
                         aiResponse = response.response;
                     } else if (response && response.message) {
+                        console.log('Found message field:', response.message);
                         aiResponse = response.message;
                     } else if (response && response.text) {
+                        console.log('Found text field:', response.text);
                         aiResponse = response.text;
                     } else if (response && response.result) {
+                        console.log('Found result field:', response.result);
                         aiResponse = response.result;
                     } else if (response && typeof response === 'object') {
-                        // If it's an object but doesn't match expected keys, stringify it
+                        console.log('Response is object, stringifying:', response);
                         aiResponse = JSON.stringify(response, null, 2);
                     } else {
+                        console.log('No valid response format found');
                         aiResponse = 'No valid response received from AI agent';
                     }
                     
+                    console.log('Final AI response:', aiResponse);
                     addMessage(aiResponse, 'assistant');
                 })
                 .catch(error => {
@@ -569,6 +581,8 @@
                 session_id: 'session-' + Date.now()
             };
 
+            console.log('Sending payload:', payload);
+
             return fetch(webhookUrl, {
                 method: 'POST',
                 headers: {
@@ -578,18 +592,37 @@
                 body: JSON.stringify(payload)
             })
             .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+                
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 return response.text(); // Get raw text first
             })
             .then(text => {
-                console.log('Raw response:', text); // Debug log
+                console.log('Raw response text:', text);
+                console.log('Raw response length:', text.length);
+                console.log('Raw response type:', typeof text);
+                
+                if (!text || text.trim() === '') {
+                    console.error('Empty response received');
+                    return { response: 'Empty response from webhook' };
+                }
+                
                 try {
-                    return JSON.parse(text);
+                    const parsed = JSON.parse(text);
+                    console.log('Successfully parsed JSON:', parsed);
+                    console.log('Parsed type:', typeof parsed);
+                    console.log('Is array:', Array.isArray(parsed));
+                    if (Array.isArray(parsed)) {
+                        console.log('Array length:', parsed.length);
+                        console.log('First item:', parsed[0]);
+                    }
+                    return parsed;
                 } catch (e) {
                     console.error('JSON parse error:', e);
-                    // If it's not JSON, treat the text as the response
+                    console.log('Treating as plain text response');
                     return { response: text };
                 }
             });
