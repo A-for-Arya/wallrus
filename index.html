@@ -3,217 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WordPress Chatbot Test Environment</title>
+    <title>AI Chat Assistant</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .test-controls {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #dee2e6;
-        }
-        
-        .test-controls h3 {
-            margin-top: 0;
-            color: #495057;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #495057;
-        }
-        
-        input[type="text"], input[type="url"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            font-size: 14px;
+            padding: 0;
             box-sizing: border-box;
         }
-        
-        button {
-            background: #007cba;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        
-        button:hover {
-            background: #005a87;
-        }
-        
-        .status {
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            font-weight: 600;
-        }
-        
-        .status.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .status.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .status.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        
-        .log {
-            background: #2d3748;
-            color: #e2e8f0;
-            padding: 15px;
-            border-radius: 5px;
-            max-height: 300px;
-            overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            margin: 10px 0;
-        }
-        
-        .log-entry {
-            margin: 5px 0;
-            padding: 5px;
-            border-left: 3px solid #4299e1;
-            padding-left: 10px;
-        }
-        
-        .log-entry.error {
-            border-left-color: #f56565;
-        }
-        
-        .log-entry.success {
-            border-left-color: #48bb78;
-        }
-        
-        /* Chatbot Styles */
-        #chatbot-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 350px;
-            height: 500px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            display: flex;
-            flex-direction: column;
-            z-index: 9999;
+
+        body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            border: 1px solid #e1e8ed;
+            background: #0f0f23;
+            color: #e5e5e7;
+            height: 100vh;
             overflow: hidden;
         }
 
-        .chatbot-hidden {
-            display: none !important;
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
         }
 
-        .chatbot-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
             font-weight: 600;
-            font-size: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
         }
 
-        #chatbot-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0;
-            width: 32px;
-            height: 32px;
+        .webhook-config {
             display: flex;
-            align-items: center;
+            gap: 10px;
             justify-content: center;
-            border-radius: 50%;
-            transition: background-color 0.2s ease;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
-        #chatbot-close:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+        .webhook-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #e5e5e7;
+            font-size: 14px;
+            min-width: 300px;
+            outline: none;
+            transition: all 0.2s ease;
         }
 
-        .chatbot-messages {
+        .webhook-input:focus {
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .webhook-input::placeholder {
+            color: rgba(229, 229, 231, 0.6);
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .status-indicator.ready {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .status-indicator.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .status-indicator.waiting {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+        }
+
+        .messages-container {
             flex: 1;
-            padding: 16px;
             overflow-y: auto;
-            background: #f8f9fa;
+            padding: 20px;
             scroll-behavior: smooth;
         }
 
-        .chatbot-messages::-webkit-scrollbar {
+        .messages-container::-webkit-scrollbar {
             width: 6px;
         }
 
-        .chatbot-messages::-webkit-scrollbar-track {
-            background: #f1f1f1;
+        .messages-container::-webkit-scrollbar-track {
+            background: transparent;
         }
 
-        .chatbot-messages::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
+        .messages-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 3px;
         }
 
-        .chatbot-messages::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
+        .messages-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .message {
-            margin: 12px 0;
-            padding: 12px 16px;
-            border-radius: 18px;
-            max-width: 85%;
-            word-wrap: break-word;
-            animation: messageSlide 0.3s ease-out;
-            line-height: 1.4;
+            display: flex;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.4s ease-out;
         }
 
-        @keyframes messageSlide {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -222,395 +144,431 @@
         }
 
         .message.user {
-            background: #667eea;
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 16px 20px;
+            border-radius: 18px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            margin-left: auto;
             border-bottom-right-radius: 6px;
         }
 
-        .message.bot {
-            background: white;
-            color: #333;
-            border: 1px solid #e9ecef;
+        .message.assistant .message-content {
+            background: rgba(255, 255, 255, 0.08);
+            color: #e5e5e7;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-bottom-left-radius: 6px;
         }
 
-        .message.bot.error {
-            background: #ffe6e6;
-            border-color: #ff9999;
-            color: #cc0000;
+        .message.error .message-content {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
-        .message.temporary {
-            opacity: 0.7;
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(229, 229, 231, 0.7);
             font-style: italic;
         }
 
-        .chatbot-input {
+        .typing-dots {
             display: flex;
-            padding: 16px;
-            border-top: 1px solid #e9ecef;
-            background: white;
-            gap: 8px;
+            gap: 4px;
         }
 
-        #chatbot-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #ddd;
-            border-radius: 24px;
-            outline: none;
-            font-size: 14px;
-            font-family: inherit;
-            transition: border-color 0.2s ease;
-        }
-
-        #chatbot-input:focus {
-            border-color: #667eea;
-        }
-
-        #chatbot-send {
+        .typing-dot {
+            width: 6px;
+            height: 6px;
             background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 20px;
+            border-radius: 50%;
+            animation: typingPulse 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingPulse {
+            0%, 60%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .input-container {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            max-width: 100%;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 24px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: background-color 0.2s ease;
-            white-space: nowrap;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
         }
 
-        #chatbot-send:hover:not(:disabled) {
-            background: #5a6fd8;
+        .input-wrapper:focus-within {
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        #chatbot-send:disabled {
-            background: #ccc;
-            cursor: not-allowed;
+        .message-input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: #e5e5e7;
+            font-size: 16px;
+            font-family: inherit;
+            resize: none;
+            min-height: 24px;
+            max-height: 120px;
+            line-height: 1.5;
         }
 
-        #chatbot-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
+        .message-input::placeholder {
+            color: rgba(229, 229, 231, 0.5);
+        }
+
+        .send-button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             border: none;
             border-radius: 50%;
-            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            z-index: 9998;
-            transition: transform 0.2s ease;
+            transition: all 0.2s ease;
+            color: white;
+            font-size: 16px;
         }
 
-        #chatbot-toggle:hover {
-            transform: scale(1.1);
+        .send-button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
         }
 
-        /* Mobile Responsive */
+        .send-button:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(229, 229, 231, 0.7);
+        }
+
+        .welcome-message h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #e5e5e7;
+        }
+
+        .welcome-message p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
         @media (max-width: 768px) {
-            #chatbot-container {
-                width: calc(100vw - 20px);
-                height: 70vh;
-                bottom: 10px;
-                right: 10px;
-                left: 10px;
+            .chat-container {
+                height: 100vh;
             }
-            
-            #chatbot-toggle {
-                bottom: 10px;
-                right: 10px;
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
+
+            .header {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            .webhook-config {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .webhook-input {
+                min-width: 250px;
+                width: 100%;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .messages-container {
+                padding: 15px;
+            }
+
+            .input-container {
+                padding: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>WordPress Chatbot Test Environment</h1>
-        <p>This environment simulates how your chatbot will work in WordPress. You can test the interface and n8n webhook connection.</p>
-        
-        <div class="test-controls">
-            <h3>Test Configuration</h3>
-            
-            <div class="form-group">
-                <label for="webhook-url">n8n Webhook URL:</label>
-                <input type="url" id="webhook-url" placeholder="https://your-n8n-instance.com/webhook/chatbot" value="">
+    <div class="chat-container">
+        <div class="header">
+            <h1>AI Chat Assistant</h1>
+            <div class="webhook-config">
+                <input type="url" 
+                       id="webhook-url" 
+                       class="webhook-input" 
+                       placeholder="Enter your webhook URL..."
+                       value="">
+                <div id="connection-status" class="status-indicator waiting">
+                    <span>●</span> Ready to connect
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="test-message">Test Message:</label>
-                <input type="text" id="test-message" placeholder="Hello, how are you?" value="Hello, how are you?">
-            </div>
-            
-            <button onclick="testWebhook()">Test Webhook Connection</button>
-            <button onclick="clearLog()">Clear Log</button>
-            <button onclick="toggleChatbot()">Toggle Chatbot</button>
         </div>
-        
-        <div id="status-container"></div>
-        
-        <h3>Connection Log</h3>
-        <div id="log" class="log"></div>
-        
-        <h3>Expected Payload Structure</h3>
-        <div class="status info">
-            <strong>Sent to n8n:</strong><br>
-            <code>{"message": "user message", "user_id": 1, "user_ip": "127.0.0.1", "timestamp": "2024-01-15T10:30:00Z", "page_url": "current page", "session_id": "abc123"}</code>
-        </div>
-        
-        <div class="status info">
-            <strong>Expected from n8n:</strong><br>
-            <code>{"response": "AI agent response message"}</code>
-        </div>
-        
-        <h3>Test Instructions</h3>
-        <ol>
-            <li>Enter your n8n webhook URL above</li>
-            <li>Click "Test Webhook Connection" to verify connectivity</li>
-            <li>Use the chatbot interface (click the 💬 button) to test the full flow</li>
-            <li>Check the connection log for detailed information</li>
-        </ol>
-    </div>
 
-    <!-- Chatbot HTML -->
-    <div id="chatbot-container" class="chatbot-hidden">
-        <div class="chatbot-header">
-            <span>Chat Assistant</span>
-            <button id="chatbot-close" type="button">×</button>
+        <div id="messages-container" class="messages-container">
+            <div class="welcome-message">
+                <h2>Welcome to AI Chat</h2>
+                <p>Enter your webhook URL above and start chatting with the AI assistant.</p>
+            </div>
         </div>
-        <div class="chatbot-messages" id="chatbot-messages">
-            <div class="message bot">Hello! This is a test environment. How can I help you today?</div>
-        </div>
-        <div class="chatbot-input">
-            <input type="text" id="chatbot-input" placeholder="Type your message..." maxlength="500">
-            <button id="chatbot-send" type="button">Send</button>
+
+        <div class="input-container">
+            <div class="input-wrapper">
+                <textarea id="message-input" 
+                         class="message-input" 
+                         placeholder="Type your message here..."
+                         rows="1"></textarea>
+                <button id="send-button" class="send-button" type="button">
+                    ➤
+                </button>
+            </div>
         </div>
     </div>
-    <button id="chatbot-toggle" type="button">💬</button>
 
     <script>
-        // Global variables
         let isLoading = false;
         let messageCounter = 0;
-        
-        // Initialize chatbot
+
+        // Initialize the chat
         document.addEventListener('DOMContentLoaded', function() {
-            initializeChatbot();
+            initializeChat();
         });
-        
-        function initializeChatbot() {
-            const chatbotContainer = document.getElementById('chatbot-container');
-            const chatbotToggle = document.getElementById('chatbot-toggle');
-            const chatbotClose = document.getElementById('chatbot-close');
-            const chatbotInput = document.getElementById('chatbot-input');
-            const chatbotSend = document.getElementById('chatbot-send');
-            const chatbotMessages = document.getElementById('chatbot-messages');
-            
-            // Toggle chatbot
-            chatbotToggle.addEventListener('click', function() {
-                chatbotContainer.classList.toggle('chatbot-hidden');
-                if (!chatbotContainer.classList.contains('chatbot-hidden')) {
-                    chatbotInput.focus();
-                }
+
+        function initializeChat() {
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+            const webhookInput = document.getElementById('webhook-url');
+
+            // Auto-resize textarea
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
             });
-            
-            chatbotClose.addEventListener('click', function() {
-                chatbotContainer.classList.add('chatbot-hidden');
-            });
-            
-            // Send message
-            chatbotSend.addEventListener('click', sendMessage);
-            chatbotInput.addEventListener('keypress', function(e) {
+
+            // Send message on Enter (but allow Shift+Enter for new lines)
+            messageInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage();
                 }
             });
-            
-            // Close chatbot when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('#chatbot-container') && !e.target.closest('#chatbot-toggle')) {
-                    chatbotContainer.classList.add('chatbot-hidden');
-                }
-            });
+
+            sendButton.addEventListener('click', sendMessage);
+
+            // Update connection status when webhook URL changes
+            webhookInput.addEventListener('input', updateConnectionStatus);
+            updateConnectionStatus();
         }
-        
+
+        function updateConnectionStatus() {
+            const webhookUrl = document.getElementById('webhook-url').value;
+            const statusElement = document.getElementById('connection-status');
+            
+            if (webhookUrl.trim()) {
+                statusElement.className = 'status-indicator ready';
+                statusElement.innerHTML = '<span>●</span> Connected';
+            } else {
+                statusElement.className = 'status-indicator waiting';
+                statusElement.innerHTML = '<span>●</span> Ready to connect';
+            }
+        }
+
         function sendMessage() {
-            const chatbotInput = document.getElementById('chatbot-input');
-            const chatbotSend = document.getElementById('chatbot-send');
-            const message = chatbotInput.value.trim();
-            
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+            const message = messageInput.value.trim();
+
             if (!message || isLoading) return;
-            
+
+            const webhookUrl = document.getElementById('webhook-url').value.trim();
+            if (!webhookUrl) {
+                showError('Please enter a webhook URL first');
+                return;
+            }
+
             isLoading = true;
-            chatbotSend.disabled = true;
-            chatbotSend.textContent = 'Sending...';
-            
+            sendButton.disabled = true;
+
             // Add user message
             addMessage(message, 'user');
-            chatbotInput.value = '';
-            
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+
             // Show typing indicator
-            const typingId = addMessage('Typing...', 'bot', true);
-            
+            const typingId = addTypingIndicator();
+
             // Send to webhook
-            sendToWebhook(message)
+            sendToWebhook(message, webhookUrl)
                 .then(response => {
                     removeMessage(typingId);
                     if (response && response.response) {
-                        addMessage(response.response, 'bot');
-                        logMessage('SUCCESS: Received response from n8n', 'success');
+                        addMessage(response.response, 'assistant');
                     } else {
-                        addMessage('Invalid response format from n8n', 'bot error');
-                        logMessage('ERROR: Invalid response format', 'error');
+                        addMessage('Invalid response format from webhook', 'error');
                     }
                 })
                 .catch(error => {
                     removeMessage(typingId);
-                    addMessage('Connection error: ' + error.message, 'bot error');
-                    logMessage('ERROR: ' + error.message, 'error');
+                    addMessage('Connection error: ' + error.message, 'error');
+                    updateConnectionStatus('error');
                 })
                 .finally(() => {
                     isLoading = false;
-                    chatbotSend.disabled = false;
-                    chatbotSend.textContent = 'Send';
-                    chatbotInput.focus();
+                    sendButton.disabled = false;
+                    messageInput.focus();
                 });
         }
-        
-        function addMessage(text, type, isTemporary = false) {
+
+        function addMessage(text, type) {
             const messageId = 'msg-' + (++messageCounter);
-            const messageClass = isTemporary ? `message ${type} temporary` : `message ${type}`;
-            
+            const messagesContainer = document.getElementById('messages-container');
+
+            // Remove welcome message if it exists
+            const welcomeMessage = messagesContainer.querySelector('.welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+
             const messageElement = document.createElement('div');
             messageElement.id = messageId;
-            messageElement.className = messageClass;
-            messageElement.textContent = text;
-            
-            const chatbotMessages = document.getElementById('chatbot-messages');
-            chatbotMessages.appendChild(messageElement);
+            messageElement.className = `message ${type}`;
+
+            const contentElement = document.createElement('div');
+            contentElement.className = 'message-content';
+            contentElement.textContent = text;
+
+            messageElement.appendChild(contentElement);
+            messagesContainer.appendChild(messageElement);
+
             scrollToBottom();
-            
             return messageId;
         }
-        
+
+        function addTypingIndicator() {
+            const messageId = 'typing-' + Date.now();
+            const messagesContainer = document.getElementById('messages-container');
+
+            const messageElement = document.createElement('div');
+            messageElement.id = messageId;
+            messageElement.className = 'message assistant';
+
+            const contentElement = document.createElement('div');
+            contentElement.className = 'message-content';
+
+            const typingElement = document.createElement('div');
+            typingElement.className = 'typing-indicator';
+            typingElement.innerHTML = `
+                AI is thinking...
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+
+            contentElement.appendChild(typingElement);
+            messageElement.appendChild(contentElement);
+            messagesContainer.appendChild(messageElement);
+
+            scrollToBottom();
+            return messageId;
+        }
+
         function removeMessage(messageId) {
             const element = document.getElementById(messageId);
             if (element) {
                 element.remove();
             }
         }
-        
+
         function scrollToBottom() {
-            const chatbotMessages = document.getElementById('chatbot-messages');
-            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            const messagesContainer = document.getElementById('messages-container');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
-        
-        function sendToWebhook(message) {
-            const webhookUrl = document.getElementById('webhook-url').value;
-            
-            if (!webhookUrl) {
-                throw new Error('Please enter a webhook URL');
-            }
-            
+
+        function sendToWebhook(message, webhookUrl) {
             const payload = {
                 message: message,
                 user_id: 1,
                 user_ip: '127.0.0.1',
                 timestamp: new Date().toISOString(),
                 page_url: window.location.href,
-                session_id: 'test-session-' + Date.now()
+                session_id: 'session-' + Date.now()
             };
-            
-            logMessage('Sending to webhook: ' + webhookUrl, 'info');
-            logMessage('Payload: ' + JSON.stringify(payload, null, 2), 'info');
-            
+
             return fetch(webhookUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Webhook-Source': 'wordpress-test',
-                    'X-Site-URL': window.location.origin
+                    'X-Webhook-Source': 'chatbot-interface'
                 },
                 body: JSON.stringify(payload)
             })
             .then(response => {
-                logMessage('Response status: ' + response.status, response.ok ? 'success' : 'error');
-                
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
-                
                 return response.json();
-            })
-            .then(data => {
-                logMessage('Response data: ' + JSON.stringify(data, null, 2), 'success');
-                return data;
             });
         }
-        
-        function testWebhook() {
-            const webhookUrl = document.getElementById('webhook-url').value;
-            const testMessage = document.getElementById('test-message').value;
+
+        function showError(message) {
+            const statusElement = document.getElementById('connection-status');
+            statusElement.className = 'status-indicator error';
+            statusElement.innerHTML = '<span>●</span> ' + message;
             
-            if (!webhookUrl) {
-                showStatus('Please enter a webhook URL', 'error');
-                return;
-            }
-            
-            showStatus('Testing webhook connection...', 'info');
-            
-            sendToWebhook(testMessage)
-                .then(response => {
-                    showStatus('Webhook test successful!', 'success');
-                    logMessage('Test completed successfully', 'success');
-                })
-                .catch(error => {
-                    showStatus('Webhook test failed: ' + error.message, 'error');
-                    logMessage('Test failed: ' + error.message, 'error');
-                });
-        }
-        
-        function showStatus(message, type) {
-            const statusContainer = document.getElementById('status-container');
-            statusContainer.innerHTML = `<div class="status ${type}">${message}</div>`;
-            
-            // Auto-hide after 5 seconds
             setTimeout(() => {
-                statusContainer.innerHTML = '';
-            }, 5000);
+                updateConnectionStatus();
+            }, 3000);
         }
-        
-        function logMessage(message, type = 'info') {
-            const log = document.getElementById('log');
-            const timestamp = new Date().toLocaleTimeString();
-            const logEntry = document.createElement('div');
-            logEntry.className = `log-entry ${type}`;
-            logEntry.textContent = `[${timestamp}] ${message}`;
-            
-            log.appendChild(logEntry);
-            log.scrollTop = log.scrollHeight;
-        }
-        
-        function clearLog() {
-            document.getElementById('log').innerHTML = '';
-        }
-        
-        function toggleChatbot() {
-            const chatbotContainer = document.getElementById('chatbot-container');
-            chatbotContainer.classList.toggle('chatbot-hidden');
-        }
-        
-        // Initialize log
-        logMessage('Test environment initialized', 'info');
     </script>
 </body>
 </html>
