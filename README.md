@@ -1,1 +1,1 @@
-chatbot test for wordpress
+Chatbot test for WordPress
